@@ -1,22 +1,35 @@
-      	a=0.33   !one value 
-	b=-0.66  !second value
-        do
- 	 
-         if (f(a).lt. 0.0001 .and. f(a).gt.(-0.0001))exit
-	 if(f(a)*f(b).lt. 0.0)then
- 	  c=a
-          a=(a+b)/2
-	 else
-	if(f(a)*f(c).lt. 0.0)then
- 	  b=a
-          a=(a+c)/2
-	 endif
-        endif
-	enddo
-	print*,a
-	End
-	real function f(x)
-	real x
-        f=sin(x)          !function
-	return
-	end
+program bisection   
+    
+  real :: xl = 3., xu = 4., tol = 1e-4, eta = 100., xm(2)
+  integer :: n = 0
+
+  do while (eta > tol)
+
+    xm(2) = (xu + xl)/2.
+
+    if (func(xm(1))*func(xu) > 0) then 
+      xu = xm(2)
+    else 
+      xl = xm(2)
+    end if
+
+    if (n > 0) then
+      eta = abs ((xm(2) - xm(1))*100/xm(1))
+    end if
+
+      xm(1) = xm(2)
+      n = n + 1
+
+  end do
+
+
+  print *, "The root of the given expression is :", xm(1)
+  print *, "The tolerance is                    :", eta
+    
+end program bisection
+
+real function func (x)
+  real :: x 
+  func =  4*exp(-x)*(3.2*sin(x) - 0.5*cos(x))
+end function func
+    
