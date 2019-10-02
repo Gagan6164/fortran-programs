@@ -1,20 +1,45 @@
-      program eular
-        real*8 y(100),x(100),h,n
-        open (1, file='eular.dat')
-        write(*,*)'give the value of n'
-        read(*,*)n
-        h=1.0/n
-        x(1)=0
-        do i=1,99
-            x(i+1)=x(i)+i*h
-            y(i+1)=y(i)+h*f(x(i+1))
-        enddo
-        do i=1,100
-            write(*,*)x(i),y(i)
-        enddo
-        close(1)
-        end program eular
-        function real ()
-        f(a)=-cos(a)
-        return
-        end
+program lagr
+
+  implicit none
+  common/dims/n
+
+  integer :: n,i
+  real :: xx, val = 0.
+  real, dimension (:), allocatable :: X, Y
+
+  open (unit = 1, file = "../input/lagr.in", status = 'old')
+  read(1,*) n, xx
+
+  allocate ( X(n) )
+  allocate ( Y(n) )
+
+  read(1,*) (X(i), Y(i), i = 1,n)
+  close(1)
+
+  do i = 1,n
+    val = val + Li(xx, X, i)*Y(i)
+  end do
+
+  print *, "The value of the interpolated function is =", val
+
+contains
+
+real function Li (xx, X, i)
+
+  implicit none
+  common/dims/n
+
+  integer :: n, i, j
+  real :: xx, X(n)
+
+  Li = 1.
+  do j = 1, n
+    if (j == i) cycle
+    Li = Li*(xx - X(j))/(X(i) - X(j));
+  end do
+
+end function Li
+
+end program lagr
+
+
